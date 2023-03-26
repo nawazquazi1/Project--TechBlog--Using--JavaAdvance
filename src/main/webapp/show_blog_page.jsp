@@ -1,24 +1,35 @@
+<%@page import="com.tech.blog.dao.LikeDao"%>
+<%@page import="java.text.DateFormat"%>
+<%@page import="com.tech.blog.dao.UserDao"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="com.tech.blog.entities.Category"%>
+<%@page import="com.tech.blog.entities.Category"%>
 <%@page import="com.tech.blog.helper.ConnectionProvider"%>
-<%@page import="com.tech.blog.entities.*"%>
-<%@page errorPage="error.jsp"%>
 <%@page import="com.tech.blog.dao.PostDao"%>
+<%@page import="com.tech.blog.entities.Post"%>
+<%@page import="com.tech.blog.entities.User"%>
+<%@page errorPage="error_page.jsp"%>
+
 <%
 User user = (User) session.getAttribute("currentUser");
 if (user == null) {
-	response.sendRedirect("login.jsp");
+	response.sendRedirect("login_page.jsp");
 }
 %>
+
+<%
+int postId = Integer.parseInt(request.getParameter("post_id"));
+PostDao d = new PostDao(ConnectionProvider.getConnection());
+Post p = d.getPostByPostId(postId);
+%>
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Profile</title>
-
-
-
+<title><%=p.getpTitle()%> || TechBlog by nawaz Quazi</title>
 
 <!--css-->
 <link rel="stylesheet"
@@ -33,6 +44,30 @@ if (user == null) {
 	clip-path: polygon(30% 0%, 70% 0%, 100% 0, 100% 91%, 63% 100%, 22% 91%, 0 99%, 0 0);
 }
 
+.post-title {
+	font-weight: 100;
+	font-size: 30px;
+}
+
+.post-content {
+	font-weight: 100;
+	font-size: 25px;
+}
+
+.post-date {
+	font-style: italic;
+	font-weight: bold;
+}
+
+.post-user-info {
+	font-size: 20px;
+}
+
+.row-user {
+	border: 1px solid #e2e2e2;
+	padding-top: 15px;
+}
+
 body {
 	background: url(img/bg.jpeg);
 	background-size: cover;
@@ -41,10 +76,12 @@ body {
 </style>
 </head>
 <body>
+
+
 	<!--navbar-->
 
 	<nav class="navbar navbar-expand-lg navbar-dark primary-background">
-		<a class="navbar-brand" href="profile.jsp"> <span
+		<a class="navbar-brand" href="index.jsp"> <span
 			class="fa fa-asterisk"></span> Tech Blog
 		</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -56,9 +93,9 @@ body {
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active"><a class="nav-link" href="#"> <span
-						class="	fa fa-bell-o"></span> Techblog<span class="sr-only">(current)</span></a>
-				</li>
+				<li class="nav-item active"><a class="nav-link"
+					href="profile.jsp"> <span class="	fa fa-bell-o"></span>TechBlog<span
+						class="sr-only">(current)</span></a></li>
 
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
@@ -103,69 +140,98 @@ body {
 
 	<!--end of navbar-->
 
+	<!--main content of body-->
 
-	<%
-	Message m = (Message) session.getAttribute("msg");
-	if (m != null) {
-	%>
-	<div class="alert <%=m.getCssClass()%>" role="alert">
-		<%=m.getContent()%>
-	</div>
-	<%
-	session.removeAttribute("msg");
-	}
-	%>
 
-	<!--main body of the page-->
+	<div class="container">
 
-	<main>
-		<div class="container">
-			<div class="row mt-4">
-				<!--first col-->
-				<div class="col-md-4">
-					<!--categories-->
-					<div class="list-group">
-						<a href="#" onclick="getPosts(0, this)"
-							class=" c-link list-group-item list-group-item-action active">
-							All Posts </a>
-						<!--categories-->
+		<div class="row my-4">
 
-						<%
-						PostDao d = new PostDao(ConnectionProvider.getConnection());
-						ArrayList<Category> list1 = d.getAllCategories();
-						for (Category cc : list1) {
-						%>
-						<a href="#" onclick="getPosts(<%=cc.getCid()%>, this)"
-							class=" c-link list-group-item list-group-item-action"><%=cc.getName()%></a>
-						<%
-						}
-						%>
+			<div class="col-md-8 offset-md-2">
+
+
+				<div class="card">
+
+					<div class="card-header primary-background text-white">
+
+						<h4 class="post-title"><%=p.getpTitle()%></h4>
+
+
 					</div>
+
+					<div class="card-body">
+
+						<img class="card-img-top my-2" src="blog_pics/<%=p.getpPic()%>"
+							alt="Card image cap">
+
+
+						<div class="row my-3 row-user">
+							<div class="col-md-8">
+								<%
+								UserDao ud = new UserDao(ConnectionProvider.getConnection());
+								%>
+
+								<p class="post-user-info">
+									<a href="#!"> <%=ud.getUserByUserId(p.getUserId()).getName()%></a>
+									has posted :
+								</p>
+							</div>
+
+							<div class="col-md-4">
+								<p class="post-date">
+									<%=DateFormat.getDateTimeInstance().format(p.getpDate())%>
+								</p>
+							</div>
+						</div>
+
+
+						<p class="post-content"><%=p.getpContent()%></p>
+
+						<br> <br>
+
+						<div class="post-code">
+							<pre><%=p.getpCode()%></pre>
+						</div>
+
+					</div>
+					<div class="card-footer primary-background">
+
+
+						<%
+						LikeDao ld = new LikeDao(ConnectionProvider.getConnection());
+						%>
+
+						<a href="#!" onclick="doLike(<%=p.getPid()%>,<%=user.getId()%>)"
+							class="btn btn-outline-light btn-sm"> <i
+							class="fa fa-thumbs-o-up"></i> <span class="like-counter"><%=ld.countLikeOnPost(p.getPid())%></span>
+						</a> <a href="#!" class="btn btn-outline-light btn-sm"> <i
+							class="fa fa-commenting-o"></i> <span>20</span>
+						</a>
+
+
+
+					</div>
+
+
 
 				</div>
 
-				<!--second col-->
-				<div class="col-md-8">
-					<!--posts-->
-					<div class="container text-center" id="loader">
-						<i class="fa fa-refresh fa-4x fa-spin"></i>
-						<h3 class="mt-2">Loading...</h3>
-					</div>
-
-					<div class="container-fluid" id="post-container"></div>
-				</div>
 
 			</div>
 
 		</div>
 
-	</main>
+	</div>
 
 
-	<!--end main body of the page-->
+
+	<!--end of main content  of body-->
 
 
 	<!--profile modal-->
+
+
+
 	<!-- Modal -->
 	<div class="modal fade" id="profile-modal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -238,8 +304,8 @@ body {
 									</tr>
 									<tr>
 										<td>Name :</td>
-										<td><input type="text" class="form-control" name="name"
-											value="<%=user.getName()%>"></td>
+										<td><input type="text" class="form-control"
+											name="user_name" value="<%=user.getName()%>"></td>
 									</tr>
 									<tr>
 										<td>Password :</td>
@@ -264,6 +330,7 @@ body {
 									</tr>
 
 								</table>
+
 								<div class="container">
 									<button type="submit" class="btn btn-outline-primary">Save</button>
 								</div>
@@ -358,9 +425,10 @@ body {
 	</div>
 
 
-	<!--  END add post modal
+	<!--END add post modal-->
 
--->
+
+
 
 
 
@@ -380,6 +448,7 @@ body {
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 	<script src="js/myjs.js" type="text/javascript"></script>
+
 	<script>
                                 $(document).ready(function () {
                                     let editStatus = false;
@@ -401,7 +470,7 @@ body {
                                     })
                                 });
         </script>
-	<!--now add post js -->
+	<!--now add post js-->
 	<script>
             $(document).ready(function (e) {
                 //
@@ -436,32 +505,6 @@ body {
                 })
             })
         </script>
-
-
-	<!--loading post using ajax -->
-	<script>
-            function getPosts(catId, temp) {
-                $("#loader").show();
-                $("#post-container").hide()
-                $(".c-link").removeClass('active')
-                $.ajax({
-                    url: "loadPosts.jsp",
-                    data: {cid: catId},
-                    success: function (data, textStatus, jqXHR) {
-                        console.log(data);
-                        $("#loader").hide();
-                        $("#post-container").show();
-                        $('#post-container').html(data)
-                        $(temp).addClass('active')
-                    }
-                })
-            }
-            $(document).ready(function (e) {
-                let allPostRef = $('.c-link')[0]
-                getPosts(0, allPostRef)
-            })
-        </script>
-
 
 </body>
 </html>

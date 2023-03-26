@@ -22,7 +22,8 @@
 
 </head>
 <body>
-<input type="hidden" id="status" value="<%=request.getAttribute("status")%>"/>
+	<input type="hidden" id="status"
+		value="<%=request.getAttribute("status")%>" />
 	<%@include file="/includes/navbar.jsp"%>
 
 	<main class="primary-background  banner-background"
@@ -38,21 +39,23 @@
 						here
 					</div>
 					<div class="card-body">
-						<form id="reg-form" action="${pageContext.request.contextPath}/newa" method="POST">
+						<form id="reg-form"
+							action="${pageContext.request.contextPath}/newa" method="POST">
 
 							<div class="form-group">
 								<label for="user_name">User Name</label> <input name="user_name"
 									type="text" class="form-control" id="user_name"
-									aria-describedby="emailHelp" placeholder="Enter name" required="required">
+									aria-describedby="emailHelp" placeholder="Enter name"
+									required="required">
 							</div>
 
 							<div class="form-group">
 								<label for="exampleInputEmail1">Email address</label> <input
 									name="user_email" type="email" class="form-control"
 									id="exampleInputEmail1" aria-describedby="emailHelp"
-									placeholder="Enter email" required="required"> <small id="emailHelp"
-									class="form-text text-muted">We'll never share your
-									email with anyone else.</small>
+									placeholder="Enter email" required="required"> <small
+									id="emailHelp" class="form-text text-muted">We'll never
+									share your email with anyone else.</small>
 							</div>
 
 
@@ -60,7 +63,8 @@
 							<div class="form-group">
 								<label for="exampleInputPassword1">Password</label> <input
 									name="user_password" type="password" class="form-control"
-									id="exampleInputPassword1" placeholder="Password" required="required">
+									id="exampleInputPassword1" placeholder="Password"
+									required="required">
 							</div>
 
 
@@ -73,15 +77,16 @@
 							<div class="form-group">
 
 								<textarea name="about" class="form-control" id="" rows="5"
-									placeholder="Enter something about yourself" ></textarea>
+									placeholder="Enter something about yourself"></textarea>
 
 							</div>
 
 
 							<div class="form-check">
 								<input name="check_1" type="checkbox" class="form-check-input"
-									id="exampleCheck1" required="required" > <label class="form-check-label"
-									for="exampleCheck1">agree terms and conditions</label>
+									id="exampleCheck1" required="required"> <label
+									class="form-check-label" for="exampleCheck1">agree
+									terms and conditions</label>
 							</div>
 
 							<br>
@@ -125,8 +130,8 @@
 	<script src="vendor/jquery/jquery.min.js"></script>
 	<script src="js/main.js"></script>
 
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-	
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 	<!-- <script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 		    <script>
@@ -177,17 +182,17 @@
         });
 
         </script> -->
-        
-     <script type="text/javascript">
-	var status=document.getElementById("status").value;
-	console.log(status);
-	if(status=="success"){
-		swal("congrats","Account Created successfull","success")
-	}else if(status=="failed"){
-		swal("faild","Account alerdy creade","error")
 
-	}
+	<script type="text/javascript">
+		var status = document.getElementById("status").value;
+		console.log(status);
+		if (status == "success") {
+			swal("congrats", "Account Created successfull", "success")
+		} else if (status == "failed") {
+			swal("faild", "Account alerdy creade", "error")
+
+		}
 	</script>
-	
+
 </body>
 </html>
