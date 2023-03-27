@@ -75,13 +75,15 @@ body {
 }
 </style>
 </head>
+<div id="fb-root"></div>
 <body>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v16.0" nonce="efSXccy6"></script>
 
 
 	<!--navbar-->
 
 	<nav class="navbar navbar-expand-lg navbar-dark primary-background">
-		<a class="navbar-brand" href="index.jsp"> <span
+		<a class="navbar-brand" href="#"> <span
 			class="fa fa-asterisk"></span> Tech Blog
 		</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -207,10 +209,11 @@ body {
 						</a> <a href="#!" class="btn btn-outline-light btn-sm"> <i
 							class="fa fa-commenting-o"></i> <span>20</span>
 						</a>
-
-
-
 					</div>
+					<div class="card-footer">
+					<div class="fb-comments" data-href="http://localhost:7498/TechBlog/show_blog_page.jsp?post_id=<%=p.getPid()%>" data-width="" data-numposts="5"></div>
+					</div>
+					
 
 
 
